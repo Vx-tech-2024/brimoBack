@@ -2,6 +2,8 @@ import { Request, Response } from "express";
 import prisma from "../config/prisma";
 import { isNonEmptyString } from "../utils/validators";
 import { generateLoanReference } from "../utils/generateLoanReference";
+import { LoanStatus } from "@prisma/client";
+import { getParam } from "../utils/getParam";
 
 const validStatuses = ["PENDING", "DISBURSED", "REJECTED"];
 
@@ -74,7 +76,7 @@ export const createLoanEntry = async (req: Request, res: Response) => {
             : normalizedStatus === "REJECTED"
             ? 0
             : amountDisbursed ?? null,
-        status: normalizedStatus,
+        status: normalizedStatus as LoanStatus,
         createdDate: new Date(createdDate),
         disbursedDate:
           normalizedStatus === "DISBURSED" && disbursedDate
@@ -126,7 +128,7 @@ export const getAllLoanEntries = async (req: Request, res: Response) => {
 
 export const getLoanEntryById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const loan = await prisma.loanEntry.findUnique({
       where: { id },
@@ -148,7 +150,7 @@ export const getLoanEntryById = async (req: Request, res: Response) => {
 
 export const updateLoanEntry = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
     const {
       teamMemberId,
       loanType,
@@ -224,7 +226,7 @@ export const updateLoanEntry = async (req: Request, res: Response) => {
             : normalizedStatus === "REJECTED"
             ? 0
             : amountDisbursed ?? null,
-        status: normalizedStatus,
+        status: normalizedStatus as LoanStatus,
         createdDate: new Date(createdDate),
         disbursedDate:
           normalizedStatus === "DISBURSED"
@@ -251,7 +253,7 @@ export const updateLoanEntry = async (req: Request, res: Response) => {
 
 export const deleteLoanEntry = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const existingLoan = await prisma.loanEntry.findUnique({
       where: { id },

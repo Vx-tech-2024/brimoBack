@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../config/prisma";
+import { getParam } from "../utils/getParam";
 
 const isValidMonth = (month: unknown) =>
   Number.isInteger(month) && Number(month) >= 1 && Number(month) <= 12;
@@ -114,7 +115,7 @@ export const getAllAgentMonthlyTargets = async (req: Request, res: Response) => 
 
 export const getAgentMonthlyTargetById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const target = await prisma.agentMonthlyTarget.findUnique({
       where: { id },
@@ -138,7 +139,7 @@ export const getAgentMonthlyTargetById = async (req: Request, res: Response) => 
 
 export const updateAgentMonthlyTarget = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
     const { teamMemberId, month, year, targetAmount, targetLoanCount } = req.body;
 
     const existingTarget = await prisma.agentMonthlyTarget.findUnique({
@@ -222,7 +223,7 @@ export const updateAgentMonthlyTarget = async (req: Request, res: Response) => {
 
 export const deleteAgentMonthlyTarget = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const existingTarget = await prisma.agentMonthlyTarget.findUnique({
       where: { id },
@@ -328,7 +329,7 @@ export const getAllTeamMonthlyTargets = async (req: Request, res: Response) => {
 
 export const getTeamMonthlyTargetById = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const target = await prisma.teamMonthlyTarget.findUnique({
       where: { id },
@@ -349,7 +350,7 @@ export const getTeamMonthlyTargetById = async (req: Request, res: Response) => {
 
 export const updateTeamMonthlyTarget = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
     const { month, year, targetAmount, targetLoanCount } = req.body;
 
     const existingTarget = await prisma.teamMonthlyTarget.findUnique({
@@ -416,7 +417,7 @@ export const updateTeamMonthlyTarget = async (req: Request, res: Response) => {
 
 export const deleteTeamMonthlyTarget = async (req: Request, res: Response) => {
   try {
-    const { id } = req.params;
+    const id = getParam(req.params.id);
 
     const existingTarget = await prisma.teamMonthlyTarget.findUnique({
       where: { id },

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const authMiddleware_1 = require("../middleware/authMiddleware");
+const perfomanceControllers_1 = require("../controllers/perfomanceControllers");
+const router = (0, express_1.Router)();
+router.use(authMiddleware_1.protect);
+router.get("/agent-tracker", perfomanceControllers_1.getAgentPerformanceTracker);
+router.get("/monthly-goal-tracker", perfomanceControllers_1.getMonthlyGoalTracker);
+router.get("/target-achieved-rate", perfomanceControllers_1.getTargetAchievedRate);
+router.get("/team-summary", perfomanceControllers_1.getTeamPerformanceSummary);
+exports.default = router;

@@ -9,8 +9,6 @@ if (!connectionString) {
 
 const adapter = new PrismaPg({ connectionString });
 
-const prisma = new PrismaClient({
-    adapter,
-});
+const prisma = new PrismaClient({});
 
 export default prisma;

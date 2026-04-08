@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../config/prisma";
 import { isNonEmptyString, isValidNonNegativeInteger } from "../utils/validators";
+import { getParam } from "../utils/getParam";
 
 export const createTeamMember = async (req: Request, res: Response) => {
     try {
@@ -64,7 +65,7 @@ export const getAllTeamMembers = async (_req: Request, res: Response) => {
 
 export const getTeamMemberById = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = getParam(req.params.id);
         const member = await prisma.teamMember.findUnique({
             where: { id },
         });
@@ -82,7 +83,7 @@ export const getTeamMemberById = async (req: Request, res: Response) => {
 
 export const updateTeamMember = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = getParam(req.params.id);
         const { fullName, employmentNumber, monthsInService, status } = req.body;
 
         const existingMember = await prisma.teamMember.findUnique({
@@ -144,7 +145,7 @@ export const updateTeamMember = async (req: Request, res: Response) => {
 
 export const deleteTeamMember = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
+        const id = getParam(req.params.id);
 
         const existingMember = await prisma.teamMember.findUnique({
             where: { id },
