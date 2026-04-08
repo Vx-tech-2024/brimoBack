@@ -1,0 +1,81 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model AdminUser {
+  id           String   @id @default(uuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model TeamMember {
+  id               String      @id @default(uuid())
+  fullName         String
+  employmentNumber String      @unique
+  monthsInService  Int
+  status           MemberStatus @default(ACTIVE)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  loans            LoanEntry[]
+  agentTargets     AgentMonthlyTarget[]
+}
+
+model LoanEntry {
+  id              String      @id @default(uuid())
+  loanReference   String      @unique
+  loanType        String
+  loanAmount      Float
+  amountDisbursed Float?
+  status          LoanStatus  @default(PENDING)
+  createdDate     DateTime
+  disbursedDate   DateTime?
+  notes           String?
+  teamMemberId    String
+  teamMember      TeamMember  @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model AgentMonthlyTarget {
+  id              String     @id @default(uuid())
+  month           Int
+  year            Int
+  targetAmount    Float
+  targetLoanCount Int
+  teamMemberId    String
+  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  @@unique([teamMemberId, month, year])
+}
+
+model TeamMonthlyTarget {
+  id              String   @id @default(uuid())
+  month           Int
+  year            Int
+  targetAmount    Float
+  targetLoanCount Int
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([month, year])
+}
+
+enum MemberStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum LoanStatus {
+  PENDING
+  DISBURSED
+  REJECTED
+}
