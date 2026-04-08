@@ -305,7 +305,7 @@ export const getMostImprovedAgent = async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Get most improved agent error:", error);
     return res.status(500).json({
-      message: "Server error while fetching most improved agent leaderboard.",
+      message: "Server error while fetching most improved agent leaderboard error.",
     });
   }
 };
