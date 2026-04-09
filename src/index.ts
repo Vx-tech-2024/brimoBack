@@ -15,16 +15,19 @@ import reportRoutes from "./routes/reportRoutes";
 dotenv.config();
 
 const app = express();
-
+console.log("CLIENT_URL:", process.env.CLIENT_URL);
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
+        origin: "https://brimoteam.netlify.app",
         credentials: true,
+        methods: ["GET", "POST", "PUT", "DELETE"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 
 app.use(express.json());
 app.use(cookieParser());
+app.options("*", cors()); // Enable pre-flight requests for all routes
 
 app.get("/", (_req: Request, res: Response) => {
     res.json({ message: "Brimo Team API is running" });
