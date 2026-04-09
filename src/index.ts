@@ -27,7 +27,6 @@ app.use(
 
 app.use(express.json());
 app.use(cookieParser());
-app.options("*", cors()); // Enable pre-flight requests for all routes
 
 app.get("/", (_req: Request, res: Response) => {
     res.json({ message: "Brimo Team API is running" });
