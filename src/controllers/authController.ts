@@ -3,7 +3,6 @@ import bcrypt from "bcrypt";
 import prisma from "../config/prisma";
 import { generateToken } from "../utils/generateToken";
 import { setAuthCookie } from "../utils/setAuthCookie";
-import { AuthenticatedRequest } from "../middleware/authMiddleware";
 
 export const loginAdmin = async (req: Request, res: Response) => {
     try {
@@ -57,7 +56,7 @@ export const logoutAdmin = async (_req: Request, res:Response) => {
 };
 
 export const getCurrentAdmin = async (
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response
 ) => {
     return res.status(200).json({

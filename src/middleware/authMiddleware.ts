@@ -1,22 +1,14 @@
-import { NextFunction,  Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../config/prisma";
-import { Request  } from "express-serve-static-core";
 
 type JwtPayload = {
     adminId: string;
 };
 
-export interface AuthenticatedRequest extends Request {
-    admin? : {
-        id: string;
-        email: string;
-        name: string
-    };
-}
 
 export const protect = async (
-    req: AuthenticatedRequest,
+    req: Request,
     res: Response,
     next: NextFunction
 ) => {
