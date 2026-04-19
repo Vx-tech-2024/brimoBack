@@ -1,6 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction,  Response } from "express";
 import jwt from "jsonwebtoken";
 import prisma from "../config/prisma";
+import { Request  } from "express-serve-static-core";
 
 type JwtPayload = {
     adminId: string;
