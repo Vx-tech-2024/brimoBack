@@ -17,31 +17,31 @@ model AdminUser {
 }
 
 model TeamMember {
-  id               String      @id @default(uuid())
+  id               String               @id @default(uuid())
   fullName         String
-  employmentNumber String      @unique
+  employmentNumber String               @unique
   monthsInService  Int
-  status           MemberStatus @default(ACTIVE)
-  createdAt        DateTime    @default(now())
-  updatedAt        DateTime    @updatedAt
-  loans            LoanEntry[]
+  status           MemberStatus         @default(ACTIVE)
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
   agentTargets     AgentMonthlyTarget[]
+  loans            LoanEntry[]
 }
 
 model LoanEntry {
-  id              String      @id @default(uuid())
-  loanReference   String      @unique
+  id              String     @id @default(uuid())
+  loanReference   String     @unique
   loanType        String
   loanAmount      Float
   amountDisbursed Float?
-  status          LoanStatus  @default(PENDING)
+  status          LoanStatus @default(PENDING)
   createdDate     DateTime
   disbursedDate   DateTime?
   notes           String?
   teamMemberId    String
-  teamMember      TeamMember  @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 }
 
 model AgentMonthlyTarget {
@@ -51,9 +51,9 @@ model AgentMonthlyTarget {
   targetAmount    Float
   targetLoanCount Int
   teamMemberId    String
-  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
   createdAt       DateTime   @default(now())
   updatedAt       DateTime   @updatedAt
+  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 
   @@unique([teamMemberId, month, year])
 }
