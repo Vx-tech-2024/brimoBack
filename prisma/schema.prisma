@@ -12,8 +12,8 @@ model AdminUser {
   name         String
   email        String   @unique
   passwordHash String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  updatedAt    DateTime @updatedAt @db.Timestamp(6)
 }
 
 model TeamMember {
@@ -21,27 +21,28 @@ model TeamMember {
   fullName         String
   employmentNumber String               @unique
   monthsInService  Int
-  status           MemberStatus         @default(ACTIVE)
-  createdAt        DateTime             @default(now())
-  updatedAt        DateTime             @updatedAt
+  status           MemberStatus?        @default(ACTIVE)
+  createdAt        DateTime             @default(now()) @db.Timestamp(6)
+  updatedAt        DateTime             @updatedAt @db.Timestamp(6)
   agentTargets     AgentMonthlyTarget[]
+  dailyActivities  DailyActivity[]
   loans            LoanEntry[]
 }
 
 model LoanEntry {
-  id              String     @id @default(uuid())
-  loanReference   String     @unique
+  id              String      @id @default(uuid())
+  loanReference   String      @unique
   loanType        String
   loanAmount      Float
   amountDisbursed Float?
-  status          LoanStatus @default(PENDING)
-  createdDate     DateTime
-  disbursedDate   DateTime?
+  status          LoanStatus? @default(PENDING)
+  createdDate     DateTime    @db.Timestamp(6)
+  disbursedDate   DateTime?   @db.Timestamp(6)
   notes           String?
   teamMemberId    String
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  createdAt       DateTime    @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime    @updatedAt @db.Timestamp(6)
+  teamMember      TeamMember  @relation(fields: [teamMemberId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model AgentMonthlyTarget {
@@ -51,9 +52,9 @@ model AgentMonthlyTarget {
   targetAmount    Float
   targetLoanCount Int
   teamMemberId    String
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
+  createdAt       DateTime   @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime   @updatedAt @db.Timestamp(6)
+  teamMember      TeamMember @relation(fields: [teamMemberId], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@unique([teamMemberId, month, year])
 }
@@ -64,10 +65,26 @@ model TeamMonthlyTarget {
   year            Int
   targetAmount    Float
   targetLoanCount Int
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt       DateTime @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime @updatedAt @db.Timestamp(6)
 
   @@unique([month, year])
+}
+
+model DailyActivity {
+  id                    String       @id @default(uuid())
+  teamMemberId          String
+  activityType          ActivityType
+  prospectsGiven        Int
+  actualProspectsCalled Int
+  variance              Int
+  loanCreated           Boolean      @default(false)
+  loanId                String?
+  date                  DateTime     @db.Timestamp(6)
+  createdAt             DateTime     @default(now()) @db.Timestamp(6)
+  updatedAt             DateTime     @updatedAt @db.Timestamp(6)
+  supervisorComment     String?
+  teamMember            TeamMember   @relation(fields: [teamMemberId], references: [id], onDelete: Cascade)
 }
 
 enum MemberStatus {
@@ -79,4 +96,11 @@ enum LoanStatus {
   PENDING
   DISBURSED
   REJECTED
+}
+
+enum ActivityType {
+  DATA_FOLLOW_UP
+  FIELD_WORK
+  INSTITUTIONAL_VISIT
+  OTHERS
 }

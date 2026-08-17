@@ -11,6 +11,7 @@ import targetRoutes from "./routes/targetRoutes";
 import perfomanceRoutes from "./routes/perfomanceRoutes";
 import leaderboardRoutes from "./routes/leaderboardRoutes";
 import reportRoutes from "./routes/reportRoutes";
+import dailyActivityRoutes from "./routes/dailyActivityRoutes";
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ app.use("/api/targets", targetRoutes);
 app.use("/api/performance", perfomanceRoutes);
 app.use("/api/leaderboards", leaderboardRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/daily-activities", dailyActivityRoutes);
 
 app.get("/api/protected-test", protect, (req: Request, res: Response) => {
     res.json({ message: "You accesses a protected route" });
