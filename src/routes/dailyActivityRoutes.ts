@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/", protect, getDailyActivities);
 router.post("/", protect, createDailyActivity);
-router.put("/", protect, updateDailyActivity);
-router.delete("/", protect, deleteDailyActivity);
+router.put("/:id", protect, updateDailyActivity);
+router.delete("/:id", protect, deleteDailyActivity);
 
 export default router;
